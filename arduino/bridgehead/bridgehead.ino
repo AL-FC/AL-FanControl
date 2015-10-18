@@ -5,20 +5,21 @@
 #include <SoftPWM.h>
 
 // pins to which the fans are connected physically
-int PINS_PWM[] = {2, 6, 9};
-int PINS_PULSE[] = {3, 7, 8};
+// connector index  0  1  2  3   4   5   6   7
+int PINS_PWM[]   = {2, 6, 9, 4, A3, 15, 10, A1};
+int PINS_PULSE[] = {3, 7, 8, 5, A2, 14, 16, A0};
 
 void setup() {
-  // init serial
+  // initialize serial connection
   Serial.begin(9600);
   
   // init pwm
   SoftPWMBegin();
-  for (int i = 0; i < 3; i++) {
+  for (int i = 0; i < 8; i++) {      
     pinMode(PINS_PULSE[i], INPUT);
     digitalWrite(PINS_PULSE[i],HIGH);
     
-    SoftPWMSetFadeTime(PINS_PWM[i], 100, 100);
+    SoftPWMSetFadeTime(PINS_PWM[i], 0, 0);
     SoftPWMSet(PINS_PWM[i], 0);
   }
 }
@@ -33,9 +34,11 @@ void loop() {
 
   // iterate fans, collect pulse durations
   String pulseDurations = ":";
-  for (int i = 0; i != 3; i++) {
-    // parse value left of a ';' and set according fan
-    SoftPWMSet(PINS_PWM[i], message.substring(0, message.indexOf(';')).toInt());
+  for (int i = 0; i < 8; i++) {
+    // parse value left of a ';' 
+    int value = message.substring(0, message.indexOf(';')).toInt();
+    
+    SoftPWMSet(PINS_PWM[i], value);
     
     // strip part left of a ';' from message
     message = message.substring(message.indexOf(';') + 1);

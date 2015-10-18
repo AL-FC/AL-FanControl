@@ -1,42 +1,35 @@
 #! python
 """Hello."""
 
-import time
-
 import sensors
 
-TEMP_TYPE = 2
-CPU_PREFIX = 'k10temp'
 
+def get_temps(chips, features):
+    """Get temperatures from lmsensors."""
+    temps = [None] * max(len(chips), len(features))
 
-def get_cpu_temp():
-    """Get the temperature of the cpu."""
     sensors.init()
     try:
+
         for chip in sensors.iter_detected_chips():
-            if chip.prefix != CPU_PREFIX:
+            if chip.prefix not in chips:
                 continue
 
-            # print '%s at %s' % (chip, chip.adapter_name)
-            # print(chip.adapter_name, chip.addr, chip.bus, chip.has_wildcards,
-            #       chip.path, chip.prefix)
-
             for feature in chip:
-                if feature.type != TEMP_TYPE:
+                if feature.name not in features:
                     continue
-                # print '  %s: %.2f' % (feature.label, feature.get_value())
-                return feature.get_value()
+
+                # determine index of the temperature
+                index = None
+                for start_index in range(len(features)):
+                    feature_index = features[start_index:].index(feature.name)
+                    chip_index = chips[start_index:].index(chip.prefix)
+                    if feature_index == chip_index:
+                        index = start_index + feature_index
+                        break
+
+                temps[index] = feature.get_value()
     finally:
         sensors.cleanup()
 
-
-def get_temps():
-    cpu = get_cpu_temp()
-    return [cpu] + [0] * 7
-
-
-if __name__ == '__main__':
-    while True:
-        temp = get_cpu_temp()
-        print(temp)
-        time.sleep(1)
+    return temps

@@ -51,33 +51,70 @@ def duration2rpm(duration):
     return rpm
 
 
+def signum(int):
+    if (int < 0):
+        return -1
+    elif (int > 0):
+        return 1
+    else:
+        return 0
+
+
 def format_fans(fans):
-    return format_line(prefix=' fans', values=fans)
+    return format_line(prefix='fans'.rjust(12), values=fans)
 
 
 def format_rpms(rpms):
-    return format_line(prefix=' rpms', values=rpms)
+    return format_line(prefix='rpms'.rjust(12), values=rpms)
 
 
 def format_pwms(pwms):
-    return format_line(prefix=' pwms', values=pwms)
+    return format_line(prefix='pwms'.rjust(12), values=pwms)
 
 
 def format_tmps(tmps):
-    return format_line(prefix='temps', values=tmps)
+    return format_line(prefix='temps'.rjust(12), values=tmps)
 
 
 def format_names(names):
-    return format_line(prefix='names', values=names)
+    return format_line(prefix='names'.rjust(12), values=names)
 
 
 def format_ports(ports):
-    return format_line(prefix='ports', values=ports)
+    return format_line(prefix='ports'.rjust(12), values=ports)
 
 
 def format_temps(temps):
-    #temps = [round(temp, 1) for temp in temps]
-    return format_line(prefix='temps', values=temps)
+    # temps = [round(temp, 1) for temp in temps]
+    return format_line(prefix='temps'.rjust(12), values=temps)
+
+
+def format_limits(limits):
+    return format_line(prefix='limits'.rjust(12), values=limits)
+
+
+def format_buffers(buffers):
+    return format_line(prefix='buffers'.rjust(12), values=buffers)
+
+
+def format_hysteresises(hysteresises):
+    return format_line(prefix='hysteresises'.rjust(12), values=hysteresises)
+
+
+def format_decisions(decisions):
+    return format_line(prefix='decisions'.rjust(12), values=decisions)
+
+
+def format_directions(directions):
+    return format_line(prefix='directions'.rjust(12), values=directions)
+
+
+def format_differences(differences):
+    return format_line(prefix='differences'.rjust(12), values=differences)
+
+
+def format_pwms_new(pwms_new):
+    return format_line(prefix='new pwms'.rjust(12), values=pwms_new)
 
 
 def format_line(prefix, values):
