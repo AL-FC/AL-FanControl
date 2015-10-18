@@ -1,0 +1,106 @@
+class IncompleteMessageError(Exception):
+    pass
+
+
+def parse_rpms(message):
+    durations = parse_durations(message=message)
+    rpms = [duration2rpm(duration) for duration in durations]
+    return rpms
+
+
+def parse_durations(message):
+    # if there is a line break in the message, parse the longest part
+    if False and '\r' in message:
+        sub_messages = message.split('\r')
+        message = ''
+        for sub_message in sub_messages:
+            if message.count(':') == 0:
+                message = sub_message
+            if message.count(';') < sub_message.count(';'):
+                message = sub_message
+
+    if False and message.count(':') > 1:
+        messages = message.split(':')
+        if len(messages[0]) > len(messages[1]):
+            message = message[0]
+        else:
+            message = message[1]
+
+    if False and not message.count(";") >= 3:
+        raise IncompleteMessageError(message)
+
+    if not message.count(":") >= 1:
+        raise IncompleteMessageError(message)
+
+    if False and not message.startswith(':'):
+        message = message.split(':')[1]
+
+    message = message.lstrip(':')
+    rpms = message.split(';')
+
+    rpms = rpms[:-1] if rpms[-1] == '' else rpms
+    return rpms
+
+
+def duration2rpm(duration):
+    duration = int(duration)
+    if duration == 0:
+        return duration
+    rpm = 1000000 / duration / 2 * 60
+    rpm = int(rpm)
+    return rpm
+
+
+def format_fans(fans):
+    return format_line(prefix=' fans', values=fans)
+
+
+def format_rpms(rpms):
+    return format_line(prefix=' rpms', values=rpms)
+
+
+def format_pwms(pwms):
+    return format_line(prefix=' pwms', values=pwms)
+
+
+def format_tmps(tmps):
+    return format_line(prefix='temps', values=tmps)
+
+
+def format_names(names):
+    return format_line(prefix='names', values=names)
+
+
+def format_ports(ports):
+    return format_line(prefix='ports', values=ports)
+
+
+def format_temps(temps):
+    #temps = [round(temp, 1) for temp in temps]
+    return format_line(prefix='temps', values=temps)
+
+
+def format_line(prefix, values):
+    string = ''
+    string += prefix
+    string += ': '
+    string += '['
+    for value in values:
+        value = str(value) if value is not None else ''
+        string += value.rjust(6)
+        string += ', '
+    string = string[:-len(', ')]
+    string += ']'
+
+    return string
+
+
+def pwms_to_message(pwms):
+    '''
+    pwms = [90, 180, 180, None, 180, None, None, None]
+    message = '090;180;180;123;180;123;123;123'
+    '''
+    pwms = [pwm if pwm is not None else 123 for pwm in pwms]
+    pwms = [str(pwm) for pwm in pwms]
+    message = ';'.join(pwms)
+    return message

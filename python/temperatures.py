@@ -30,7 +30,13 @@ def get_cpu_temp():
         sensors.cleanup()
 
 
-while True:
-    temp = get_cpu_temp()
-    print(temp)
-    time.sleep(1)
+def get_temps():
+    cpu = get_cpu_temp()
+    return [cpu] + [0] * 7
+
+
+if __name__ == '__main__':
+    while True:
+        temp = get_cpu_temp()
+        print(temp)
+        time.sleep(1)
