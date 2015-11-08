@@ -7,11 +7,11 @@ from multiprocessing import Process, Queue
 import serial
 
 from temperatures import get_temps
-from util import (format_buffers, format_decisions, format_differences,
-                  format_directions, format_fans, format_hysteresises,
-                  format_limits, format_names, format_ports, format_pwms,
-                  format_pwms_new, format_rpms, format_temps, format_tmps,
-                  parse_rpms, pwms_to_message, signum)
+from util import (
+    clip_pwm, format_buffers, format_decisions, format_differences,
+    format_directions, format_fans, format_hysteresises, format_limits,
+    format_names, format_ports, format_pwms, format_pwms_new, format_rpms,
+    format_temps, format_tmps, message_to_rpms, pwms_to_message, signum)
 
 SCALING_FACTOR = 0.05  # usually in (0.01, 0.1)
 
@@ -61,11 +61,13 @@ def main():
             message = queue_read.get()
         except KeyboardInterrupt:
             break
-        rpms = parse_rpms(message=message)
+        rpms = message_to_rpms(message=message)
 
-        temps = [int(round(temp, 0)) if temp is not None else None
-                 for temp in get_temps(chips=chips,
-                                       features=features)]
+        temps = [
+            int(round(temp, 0)) if temp is not None else None
+            for temp in get_temps(chips=chips,
+                                  features=features)
+        ]
 
         buffers = [
             limit - temp if limit is not None and temp is not None else None
@@ -73,15 +75,15 @@ def main():
         ]
 
         decisions = [
-            abs(limit - temp) > hysteresis if
-            limit is not None and temp is not None and hysteresis is not None
-            else None
+            abs(limit - temp) > hysteresis
+            if None not in [limit, temp, hysteresis] else None
             for (limit, temp, hysteresis) in zip(limits, temps, hysteresises)
         ]
 
-        directions = [signum(limit - temp)
-                      if limit is not None and temp is not None else None
-                      for (limit, temp) in zip(limits, temps)]
+        directions = [
+            signum(limit - temp) if None not in [limit, temp] else None
+            for (limit, temp) in zip(limits, temps)
+        ]
 
         differences = [
             int(round(pwm * direction * SCALING_FACTOR, 0))
@@ -89,11 +91,11 @@ def main():
             for (pwm, direction, decision) in zip(pwms, directions, decisions)
         ]
 
-        pwms_new = [int(round(pwm + difference, 0))
-                    if pwm is not None and difference is not None else pwm
-                    for (pwm, difference) in zip(pwms, differences)]
-        pwms_new = [0 if pwm_new < 0 else 255 if pwm_new > 255 else pwm_new
-                    for pwm_new in pwms_new]
+        pwms_new = [
+            clip_pwm(int(round(pwm + difference, 0)))
+            if None not in [pwm, difference] else pwm
+            for (pwm, difference) in zip(pwms, differences)
+        ]
 
         print(format_fans(fans=fans))
         print(format_ports(ports=ports))

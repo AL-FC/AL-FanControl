@@ -2,7 +2,7 @@ class IncompleteMessageError(Exception):
     pass
 
 
-def parse_rpms(message):
+def message_to_rpms(message):
     durations = parse_durations(message=message)
     rpms = [duration2rpm(duration) for duration in durations]
     return rpms
@@ -130,6 +130,15 @@ def format_line(prefix, values):
     string += ']'
 
     return string
+
+
+def clip_pwm(pwm):
+    return clip(pwm, 0, 255)
+
+
+def clip(value, minimum, maximum):
+    value = sorted([minimum, value, maximum])[1]
+    return value
 
 
 def pwms_to_message(pwms):
