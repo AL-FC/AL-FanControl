@@ -37,7 +37,15 @@ def _writer(console, queue_write):
 
 
 def main():
-    console = serial.Serial('/dev/ttyACM4', 9600, timeout=1)
+    pwms = [178, 255, 255, None, 45, None, None, None]  # at idle
+    ports = [0, 1, 2, 3, 4, 5, 6, 7, ]
+    fans = ['CPU', 'Case', 'Case', None, 'GPU', None, None, None]
+    chips = ['k10temp', 'it8718', 'it8718', None, 'radeon', None, None, None]
+    features = ['temp1', 'temp1', 'temp1', None, 'temp1', None, None, None]
+    limits = [55, 40, 50, None, 75, None, None, None]
+    hysteresises = [3, 3, 3, None, 3, None, None, None]
+
+    console = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
     queue_read = Queue(maxsize=1)
     queue_write = Queue(maxsize=1)
 
@@ -46,13 +54,8 @@ def main():
     writer_t = Process(target=_writer, args=([console, queue_write]))
     writer_t.start()
 
-    pwms = [255, 255, 255, None, 120, None, None, None]  # at idle
-
     while True:
         queue_write.put(pwms_to_message(pwms=pwms))
-
-        ports = list(range(0, 8))
-        fans = ['CPU', 'Case', 'Case', None, 'GPU', None, None, None]
 
         try:
             message = queue_read.get()
@@ -60,22 +63,14 @@ def main():
             break
         rpms = parse_rpms(message=message)
 
-        chips = ['k10temp', 'it8718', 'it8718', None, 'radeon', None, None,
-                 None]
-        features = ['temp1', 'temp1', 'temp3', None, 'temp1', None, None, None]
-
         temps = [int(round(temp, 0)) if temp is not None else None
                  for temp in get_temps(chips=chips,
                                        features=features)]
-
-        limits = [60, 40, 50, None, 70, None, None, None]
 
         buffers = [
             limit - temp if limit is not None and temp is not None else None
             for (temp, limit) in zip(temps, limits)
         ]
-
-        hysteresises = [5, 5, 5, None, 5, None, None, None]
 
         decisions = [
             abs(limit - temp) > hysteresis if
@@ -115,8 +110,6 @@ def main():
         pwms = pwms_new
 
         print()
-
-        # TODO calculate response
 
     reader_t.terminate()
     writer_t.terminate()
