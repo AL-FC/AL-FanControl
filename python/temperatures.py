@@ -9,27 +9,26 @@ def get_temps(chips, features):
     temps = [None] * max(len(chips), len(features))
 
     sensors.init()
-    try:
 
-        for chip in sensors.iter_detected_chips():
-            if chip.prefix not in chips:
+    for chip in sensors.iter_detected_chips():
+        if chip.prefix not in chips:
+            continue
+
+        for feature in chip:
+            if feature.name not in features:
                 continue
 
-            for feature in chip:
-                if feature.name not in features:
-                    continue
+            # determine index of the temperature
+            index = None
+            for start_index in range(len(features)):
+                feature_index = features[start_index:].index(feature.name)
+                chip_index = chips[start_index:].index(chip.prefix)
+                if feature_index == chip_index:
+                    index = start_index + feature_index
+                    break
 
-                # determine index of the temperature
-                index = None
-                for start_index in range(len(features)):
-                    feature_index = features[start_index:].index(feature.name)
-                    chip_index = chips[start_index:].index(chip.prefix)
-                    if feature_index == chip_index:
-                        index = start_index + feature_index
-                        break
+            temps[index] = feature.get_value()
 
-                temps[index] = feature.get_value()
-    finally:
-        sensors.cleanup()
+    sensors.cleanup()
 
     return temps
