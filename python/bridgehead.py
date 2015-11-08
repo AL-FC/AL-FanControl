@@ -84,11 +84,12 @@ def main():
                       for (limit, temp) in zip(limits, temps)]
 
         differences = [
-            round(pwm * direction * SCALING_FACTOR, 0) if decision else None
+            int(round(pwm * direction * SCALING_FACTOR, 0))
+            if decision else None
             for (pwm, direction, decision) in zip(pwms, directions, decisions)
         ]
 
-        pwms_new = [pwm + difference
+        pwms_new = [int(round(pwm + difference, 0))
                     if pwm is not None and difference is not None else pwm
                     for (pwm, difference) in zip(pwms, differences)]
         pwms_new = [0 if pwm_new < 0 else 255 if pwm_new > 255 else pwm_new
@@ -106,10 +107,9 @@ def main():
         print(format_directions(directions=directions))
         print(format_differences(differences=differences))
         print(format_pwms_new(pwms_new=pwms_new))
+        print()
 
         pwms = pwms_new
-
-        print()
 
     reader_t.terminate()
     writer_t.terminate()
