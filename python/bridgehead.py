@@ -69,11 +69,6 @@ def main():
                                   features=features)
         ]
 
-        buffers = [
-            limit - temp if limit is not None and temp is not None else None
-            for (temp, limit) in zip(temps, limits)
-        ]
-
         decisions = [
             abs(limit - temp) > hysteresis
             if None not in [limit, temp, hysteresis] else None
@@ -103,7 +98,6 @@ def main():
         print(format_rpms(rpms=rpms))
         print(format_temps(temps=temps))
         print(format_limits(limits=limits))
-        print(format_buffers(buffers=buffers))
         print(format_hysteresises(hysteresises=hysteresises))
         print(format_decisions(decisions=decisions))
         print(format_directions(directions=directions))
