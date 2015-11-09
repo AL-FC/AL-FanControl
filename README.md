@@ -45,6 +45,44 @@ Dedicated hardware
     more scalable
     than mainboards.
 
+The electric motors
+    of modern PC fans
+    can be regulated via the voltage applied to them.
+However,
+    many fans
+    are not able to
+    spin up
+    at low voltages.
+Assuming fans to be running when they actually fail to spin up
+    may lead to unintended actions.
+For example,
+        the controller may throttle the fans excessively immediately after boot
+    and
+        only
+        apply enough voltage
+            for them to spin up,
+        when
+        the temperatures
+            of the components to be cooled
+        already exceed limits.
+Exceeding temperature limits may lead to
+    instability, errors and crashes
+    reboots
+        when there is a rescue mechanism in place
+    or
+    increased wear and tear
+        when there isn't.
+So regulating PC fans
+    via voltage is inherently dangerous.
+Alternatively,
+    some PC fans can be controlled via a digital pulse width modulated (PWM) signal.
+With PWM variants of fans costing only little more than the voltage regulated ones,
+    choosing PWM fans becomes more and more viable.
+Controlling PC fans
+    using a digital PWM signal
+    is much more reliable,
+    because the fans are guaranteed to spin up even at the lowest cycle time.
+
 FanControl is a hardware platform
     for building better fan controls.
 It works around
