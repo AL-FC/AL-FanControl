@@ -20,22 +20,36 @@ I hope to provoke
     a change in the way we control our fans
     that I feel is long overdue.
 
-Plugging PWM fans into motherboards is a gamble,
+Plugging PWM fans into mainboards is a gamble,
     because many built-in fan control do not work properly.
 Often PC users are are plagued by
     unnecessary fan noise at idle,
     nervously accelerating fans under short-time load and
     high temperatures at precious hardware.
 When swapping
-    motherboards, fans or operating systems,
+    mainboards, fans or operating systems,
     a previously well-working setup cam misbehave.
 Fan controls can be much better and reliable.
+
+Mainboards often only provide a few fan connectors,
+    usually three or four.
+PC cases come in a plethora of designs
+    that feature anywhere from 0 to arbitrarily many fans.
+So mainboards
+    are notoriously underspecified
+    for complex PC builds.
+Dedicated hardware
+    can control
+    the fans
+        of a PC
+    more scalable
+    than mainboards.
 
 FanControl is a hardware platform
     for building better fan controls.
 It works around
     the often false abstraction
-        of the motherboard
+        of the mainboard
     and replaces it with a sane lower-level layer.
 Upon this standardised lower-level operation,
     FanControl provides applications easy access to PWM fans.
@@ -124,5 +138,21 @@ Thermal limits and fan caracteristics
 ## Bill of Materials
 
 -    6 € Arduino-clone
--   10 € board (or a breadboard and good soldering skills)
+-   10 € printed circuit board (or a breadboard and good soldering skills)
 -   14 € small electronic components
+
+## See also
+
+-   [NZXT Grid+ V2](https://www.nzxt.com/product/detail/157-GRID-V2-digital-fan-controller.html)
+    -   6 channels
+    -   analog (4 - 12 V)
+    -   30 €
+    -   plugs into mainboard USB headers
+    -   mounts somewhere in the case
+    -   closed source hardware (?)
+    -   proprietary protocol (?)
+    -   [CAM](https://cam.nzxt.com/)
+        -   Windows (>= 7) GUI
+        -   cloud-based data logging and analysis
+        -   apps for mobile 
+    
