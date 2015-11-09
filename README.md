@@ -148,7 +148,8 @@ Thermal limits and fan caracteristics
     -   analog (4 - 12 V)
     -   30 €
     -   plugs into mainboard USB headers
-    -   mounts somewhere in the case
+    -   requires 4-pin molex connector for Power
+    -   mounts inside the case
     -   closed source hardware (?)
     -   proprietary protocol (?)
     -   [CAM](https://cam.nzxt.com/)
