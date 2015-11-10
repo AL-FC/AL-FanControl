@@ -207,3 +207,7 @@ Thermal limits and fan caracteristics
         -   Windows (>= 7) GUI
         -   cloud-based data logging and analysis
         -   apps for mobile
+-   [Speedfan](http://www.almico.com/speedfan.php)
+    -   windows-only software
+    -   GUI
+    -   controls the fan controllers on a mainboard
