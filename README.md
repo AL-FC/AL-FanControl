@@ -181,6 +181,19 @@ Thermal limits and fan caracteristics
 
 ## See also
 
+-   NZXT Grid
+    -   10 fans (3-pin molex)
+    -   1 channel (3-pin molex)
+    -   analog
+    -   15 €
+    -   up to 30 W
+    -   basically an amplifier for an analog fan channel on the mainboard
+    -   hardwired (not software-defined)
+    -   requires 4-pin molex connector for Power
+    -   mounts inside the case
+    -   closed source hardware (?)
+    -   proprietary protocol (?)
+
 -   [NZXT Grid+ V2](https://www.nzxt.com/product/detail/157-GRID-V2-digital-fan-controller.html)
     -   6 channels
     -   analog (4 - 12 V)
@@ -193,5 +206,4 @@ Thermal limits and fan caracteristics
     -   [CAM](https://cam.nzxt.com/)
         -   Windows (>= 7) GUI
         -   cloud-based data logging and analysis
-        -   apps for mobile 
-    
+        -   apps for mobile
