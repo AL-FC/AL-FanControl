@@ -85,8 +85,11 @@ def format_ports(ports):
 
 
 def format_temps(temps):
-    # temps = [round(temp, 1) for temp in temps]
     return format_line(prefix='temps'.rjust(12), values=temps)
+
+
+def format_ambients(ambients):
+    return format_line(prefix='ambients'.rjust(12), values=ambients)
 
 
 def format_limits(limits):
@@ -95,6 +98,10 @@ def format_limits(limits):
 
 def format_buffers(buffers):
     return format_line(prefix='buffers'.rjust(12), values=buffers)
+
+
+def format_percentages(percentages):
+    return format_line(prefix='percentages'.rjust(12), values=percentages)
 
 
 def format_hysteresises(hysteresises):
@@ -123,6 +130,10 @@ def format_line(prefix, values):
     string += ': '
     string += '['
     for value in values:
+        try:
+            value = int(round(value, 0))
+        except TypeError:
+            pass
         value = str(value) if value is not None else ''
         string += value.rjust(6)
         string += ', '
