@@ -4,13 +4,30 @@
 import sensors
 
 
-def get_temps(chips, features):
+def get_temps(chips, features):  # pragma: no cover
     """Get temperatures from lmsensors."""
-    temps = [None] * max(len(chips), len(features))
 
+    chips_detected = _get_detected_chips()
+
+    temps = _get_temperatures(chips=chips,
+                              features=features,
+                              chips_detected=chips_detected)
+    return temps
+
+
+def _get_detected_chips():  # pragma: no cover
+    sensors.cleanup()
     sensors.init()
 
-    for chip in sensors.iter_detected_chips():
+    chips_detected = list(sensors.iter_detected_chips())
+
+    return chips_detected
+
+
+def _get_temperatures(chips, features, chips_detected):
+    temps = [None] * max(len(chips), len(features))
+
+    for chip in chips_detected:
         if chip.prefix not in chips:
             # this chip was not requested, so ignore
             continue
