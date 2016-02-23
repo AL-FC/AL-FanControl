@@ -1,0 +1,3 @@
+pip==8.0.2
+-r requirements_run.txt
+-r requirements_test.txt
