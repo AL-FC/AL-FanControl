@@ -39,39 +39,51 @@ def _get_temperatures(chips, features, chips_detected):
 
             for start_index in range(len(features)):
                 try:
-                    index = _get_index(features=features, feature=feature,
-                                       chips=chips, chip=chip,
+                    index = _get_index(chips=chips, chip=chip,
+                                       features=features, feature=feature,
                                        start_index=start_index)
-                except ValueError:
+                except (NoSuchChipError, NoSuchFeatureError,
+                        ChipFeatureMismatchError):
                     continue
 
                 # fill in list with temperature value
-                if temps[index] is not None:
-                    print('alert')
-
                 temps[index] = feature.get_value()
-
-    sensors.cleanup()
 
     return temps
 
 
 def _get_index(chips, chip, features, feature, start_index):
     try:
-        feature_index = features[start_index:].index(feature.name)
-    except ValueError:
-        raise ValueError(
-            'The requested feature does not appear beyond this point.')
-
-    try:
         chip_index = chips[start_index:].index(chip.prefix)
     except ValueError:
-        raise ValueError(
-            'The requested chip does not appear beyond this point.')
+        raise NoSuchChipError(
+            'The requested chip %s does not appear beyond this point: %s' %
+            (chip.prefix, chips[start_index:]))
+
+    try:
+        feature_index = features[start_index:].index(feature.name)
+    except ValueError:
+        raise NoSuchFeatureError(
+            'The requested feature %s does not appear beyond this point: %s' %
+            (feature.name, features[start_index:]))
 
     if feature_index != chip_index:
-        raise ValueError('this sensor does not belong to this chip.')
+        raise ChipFeatureMismatchError(
+            'The sensor %s does not belong to the chip %s.' %
+            (feature.name, chip.prefix))
 
     index = start_index + feature_index
 
     return index
+
+
+class NoSuchChipError(BaseException):
+    pass
+
+
+class NoSuchFeatureError(BaseException):
+    pass
+
+
+class ChipFeatureMismatchError(BaseException):
+    pass
