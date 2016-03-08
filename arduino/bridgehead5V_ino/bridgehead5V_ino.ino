@@ -6,8 +6,8 @@
 
 // pins to which the fans are connected physically
 // connector index  0  1  2  3   4   5   6   7
-int PINS_PWM[]   = {2, 6, 9, 4, A3, 15, 10, A1};
-int PINS_PULSE[] = {3, 7, 8, 5, A2, 14, 16, A0};
+int PINS_PWM[]   = {2, 6}; //, 9, 4, A3, 15, 10, A1};
+int PINS_PULSE[] = {3, 7}; //, 8, 5, A2, 14, 16, A0};
 
 void setup() {
   // initialize serial connection
@@ -15,17 +15,12 @@ void setup() {
   
   // init pwm
   SoftPWMBegin();
-  for (int i = 0; i < 8; i++) {      
+  for (int i = 0; i < 2; i++) {      
     pinMode(PINS_PULSE[i], INPUT);
     digitalWrite(PINS_PULSE[i],HIGH);
     
     SoftPWMSetFadeTime(PINS_PWM[i], 0, 0);
     SoftPWMSet(PINS_PWM[i], 0);
-  }
-
-  // set values to a safe and quiet default
-  for (int i = 0; i < 8; i++) {
-    SoftPWMSet(PINS_PWM[i], 160);
   }
 }
 
@@ -39,7 +34,7 @@ void loop() {
 
   // iterate fans, collect pulse durations
   String pulseDurations = ":";
-  for (int i = 0; i < 8; i++) {
+  for (int i = 0; i < 2; i++) {
     // parse value left of a ';' 
     int value = message.substring(0, message.indexOf(';')).toInt();
     
