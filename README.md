@@ -148,7 +148,7 @@ Thermal limits and fan caracteristics
     -   requires no 3.5"/5.25" bay
     -   fits in a small space inside the case
 -   affordable
-    -   < 30 € for 1 unit
+    -   about 30 € for 1 unit
 -   compatible
     -   uses common USB
 -   simple protocol
