@@ -166,12 +166,22 @@ Thermal limits and fan caracteristics
 
 ## Dependencies
 
+Hardware-level
+
 -   1 free USB port
--   1 free 12 V connector
--   PWM fans
+-   1 free 12 V Molex connector
+-   (preferably exclusively) PWM fans
+
+OS-level
+
 -   Linux
--   Python
+-   Python or Python3 or PyPy or PyPy3
 -   lm-sensors
+
+Python-level
+
+-   Py3Sensors
+-   PySerial
 
 ## Bill of Materials
 
