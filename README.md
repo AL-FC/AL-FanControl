@@ -1,6 +1,17 @@
-# FanControl
+# AL-FanControl
 
 An application-level fan control for desktop PCs using Python, Arduino and PWM fans.
+
+## Architecture
+
+AL-FanControl controls fans according to the system temperature.
+The main cause of heat in modern computers are the various processors
+    (GPU, CPU), but also memory (RAM, VRAM) and storage (HDDs, SSDs).
+The image below shows an exemplary setup of AL-FanControl
+    with three processors and two fans.
+All fans provide heat dissipation to surrounding processors.
+
+![](img/AL-FanControl-HighLevel-ComponentDiagram.png)
 
 ## Rationale
 
