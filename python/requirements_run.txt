@@ -1,2 +1,0 @@
-PySensors==0.0.3
-pyserial==3.0.1

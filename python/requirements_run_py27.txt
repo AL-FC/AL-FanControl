@@ -1,0 +1,2 @@
+hg+ssh://hg@bitbucket.org/gleb_zhulik/py3sensors
+pyserial==3.0.1
