@@ -13,6 +13,9 @@ with frequencies up to 187kHz
 
 */
 
+int pin_pulse = 7;
+
+
 /**********************************************************
    Fast PWM on pins 9,10,11 (TIMER 1)
    
@@ -142,26 +145,115 @@ void setup() {
   pwm_5_6_configure(PWM23k);
 
   Serial.begin(9600);
+
+  pinMode(pin_pulse, INPUT_PULLUP);
 }
 
-int i = 0;
+int min_int(int one, int other) {
+  if (one < other)
+    return one;
+  return other;
+}
+
+int max_int(int one, int other) {
+  if (one > other)
+    return one;
+  return other;
+}
+
+int rpm_target = 200;
+int pwm_value = 40;
+int pwm_min = 28;
+int pwm_max = 255;
+bool upwards = true;
+
+/*
+ * free air
+ * PWM - RPM - ticking
+ *   0 - off/restart
+ *   1 - off/restart
+ *   2 - off/restart
+ *   3 - off/restart
+ *   4 - off/restart
+ *   5 - off/restart
+ *   6 - off/restart
+ *   7 - off/restart
+ *   8 - off/restart
+ *   9 - off/restart
+ *  10 - off/restart
+ *  11 - off/restart
+ *  12 - off/restart
+ *  13 - off/restart
+ *  14 - off/restart
+ *  15 - off/restart
+ *  16 - off/restart
+ *  17 - off/restart
+ *  18 - off/restart
+ *  19 - off/restart
+ *  20 - off/restart
+ *  21 - off/restart
+ *  22 - off/restart
+ *  23 - off/restart
+ *  24 - off/restart
+ *  25 - off/restart
+ *  26 - off/restart
+ *  27 - off/restart
+ *  28 -  120
+ *  32 -  180 - faint
+ *  40 -  240 - yes
+ *  48 -  360 - yes
+ *  64 -  480 - yes
+ *  96 -  840 - yes
+ * 128 - 1140 - yes
+ * 130 - 1140 - yes
+ * 135 - 1140 - yes
+ * 138 - 1200 - yes
+ * 140 - 1200 - yes
+ * 150 - 1320 - faint
+ * 153 - 1320 - faint
+ * 155 - 1380 - no
+ * 160 - 1380 - no
+ * 256 - off - no
+ */
 
 void loop() {
-  // Variate throttle between 16 and 25 %
-  int value = 16 + i;
-  i = (i + 1) % 64;
-  
+  unsigned long pulseDuration = pulseIn(pin_pulse, LOW);
+  double frequency = 1000000 / pulseDuration;
+  int rpm_current = (int) frequency / 4 * 60;
+  Serial.print("RPM:");
+  Serial.println(rpm_current);
+
+  // target rpm
+/*
+  if (rpm_current < rpm_target - 1.5 / 255.0 * rpm_target)
+    pwm_value = min_int(pwm_value + 1, 255);
+  if (rpm_current > rpm_target + 1.5 / 255.0 * rpm_target)
+    pwm_value = max_int(pwm_value - 1, 0);
+*/
+
+
+  // sweep rpm
+  if (pwm_value == pwm_min)
+    upwards = true;
+  if (pwm_value == pwm_max)
+    upwards = false;
+  if (upwards)
+    pwm_value = pwm_value + 1;
+  else
+    pwm_value = pwm_value - 1;
+
   // Those fast macros require a previous configuration
   // of the channels using the pwmSet9 and pwmSet6
   // functions
   // PWMn macros are fast to execute
-  PWM5 = 255 - value;
-  PWM6 = value;
-  PWM9 = value;
-  PWM10 = value;
-  PWM11 = value; // TODO there is no pin 11 on the leonardo clones, I am using
+  PWM5 = 255 - pwm_value;
+  PWM6 = pwm_value;
+  PWM9 = pwm_value;
+  PWM10 = pwm_value;
+  PWM11 = pwm_value; // TODO there is no pin 11 on the leonardo clones, I am using
 
-  Serial.println(value, DEC);
+  Serial.print("PWM:");
+  Serial.println(pwm_value, DEC);
 
   // Small delay
   delay(100);
