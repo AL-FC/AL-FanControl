@@ -29,7 +29,7 @@ void setup() {
   int PWMS[] = {255, 255, 255, 56, 145, 145, 255, 145}; // streaming
   //int PWMS[] = {255, 255, 255, 140, 160, 160, 255, 160}; // desktop
   for (int i = 0; i < 8; i++) {
-    SoftPWMSet(PINS_PWM[i], 160);
+    SoftPWMSet(PINS_PWM[i], PWMS[i]);
   }
 }
 
