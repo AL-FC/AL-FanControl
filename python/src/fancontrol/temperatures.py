@@ -28,19 +28,24 @@ def _get_temperatures(chips, features, chips_detected):
     temps = [None] * max(len(chips), len(features))
 
     for chip in chips_detected:
-        if chip.prefix not in chips:
+        chip_prefix = to_str(chip.prefix)
+
+        if chip_prefix not in chips:
             # this chip was not requested, so ignore
             continue
 
         for feature in chip:
-            if feature.name not in features:
+            feature_name = to_str(feature.name)
+
+            if feature_name not in features:
                 # this feature was not requested, so ignore
                 continue
 
             for start_index in range(len(features)):
                 try:
                     index = _get_index(chips=chips, chip=chip,
-                                       features=features, feature=feature,
+                                       features=features,
+                                       feature=feature,
                                        start_index=start_index)
                 except (NoSuchChipError, NoSuchFeatureError,
                         ChipFeatureMismatchError):
@@ -53,24 +58,27 @@ def _get_temperatures(chips, features, chips_detected):
 
 
 def _get_index(chips, chip, features, feature, start_index):
+    feature_name = to_str(feature.name)
+    chip_prefix = to_str(chip.prefix)
+
     try:
-        chip_index = chips[start_index:].index(chip.prefix)
+        chip_index = chips[start_index:].index(chip_prefix)
     except ValueError:
         raise NoSuchChipError(
             'The requested chip %s does not appear beyond this point: %s' %
-            (chip.prefix, chips[start_index:]))
+            (chip_prefix, chips[start_index:]))
 
     try:
-        feature_index = features[start_index:].index(feature.name)
+        feature_index = features[start_index:].index(feature_name)
     except ValueError:
         raise NoSuchFeatureError(
             'The requested feature %s does not appear beyond this point: %s' %
-            (feature.name, features[start_index:]))
+            (feature_name, features[start_index:]))
 
     if feature_index != chip_index:
         raise ChipFeatureMismatchError(
             'The sensor %s does not belong to the chip %s.' %
-            (feature.name, chip.prefix))
+            (feature_name, chip_prefix))
 
     index = start_index + feature_index
 
@@ -87,3 +95,13 @@ class NoSuchFeatureError(BaseException):
 
 class ChipFeatureMismatchError(BaseException):
     pass
+
+
+def to_str(bytes_or_string):
+    try:
+        string = bytes_or_string.decode()
+    except AttributeError:
+        # prefix was str
+        string = bytes_or_string
+
+    return string
