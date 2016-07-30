@@ -1,17 +1,29 @@
 # AL-FanControl
 
-An application-level fan control for desktop PCs using Python, Arduino and PWM fans.
+An application-level fan control for desktop PCs
+    using Linux, Python, Arduino and PWM fans.
 
 ## Architecture
 
 AL-FanControl controls fans according to the system temperature.
-The main cause of heat in modern computers are the various processors
-    (GPU, CPU), but also memory (RAM, VRAM) and storage (HDDs, SSDs).
 The image below shows an exemplary setup of AL-FanControl
     with three processors and two fans.
-All fans provide heat dissipation to surrounding processors.
 
 ![](img/AL-FanControl-HighLevel-ComponentDiagram.png)
+
+The main heat sources in modern computers usually expose some sensors via I2C.
+These sensors can be read using LM-Sensors via an command line interface.
+Py3Sensors provides an API to Python2 and Python3 appications.
+This project's `Temperatures.py` reduces Py3Sensors API to temperature sensors.
+This project's main application is `AL-FanControl.py`,
+    which reacts to changed temperatures with changing the fan setpoints.
+To send the setpoints to the controller,
+    it uses the API of the `Bridgehead.py`.
+The `Bridgehead.py` uses a serial interface (USB)
+    to transfer the setpoints to the controller.
+The controller controls the fans
+    by setting its PWM outputs according to the setpoints.
+All fans dissipate heat from surrounding processors.
 
 ## Rationale
 
