@@ -16,8 +16,7 @@ void setup() {
   // init pwm
   SoftPWMBegin();
   for (int i = 0; i < 8; i++) {      
-    pinMode(PINS_PULSE[i], INPUT);
-    digitalWrite(PINS_PULSE[i],HIGH);
+    pinMode(PINS_PULSE[i], INPUT_PULLUP);
     
     SoftPWMSetFadeTime(PINS_PWM[i], 0, 0);
     SoftPWMSet(PINS_PWM[i], 0);
