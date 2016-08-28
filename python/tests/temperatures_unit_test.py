@@ -7,12 +7,12 @@ from __future__ import (absolute_import, division, print_function,
 
 from unittest.case import TestCase
 
+from fancontrol.sense.temperatures import (ChipFeatureMismatchError,
+                                           NoSuchChipError, NoSuchFeatureError,
+                                           _get_detected_chips, _get_index,
+                                           _get_temperatures)
 from mock import MagicMock, Mock
 from nose.tools import assert_raises
-
-from fancontrol.temperatures import (ChipFeatureMismatchError, NoSuchChipError,
-                                     NoSuchFeatureError, _get_detected_chips,
-                                     _get_index, _get_temperatures)
 
 
 class GetIndexUnitTests(TestCase):

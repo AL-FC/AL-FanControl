@@ -3,7 +3,7 @@ from __future__ import (absolute_import, division, print_function,
 
 from unittest.case import TestCase
 
-from fancontrol import temperatures
+from fancontrol.sense import temperatures
 
 
 class NoneTests(TestCase):
