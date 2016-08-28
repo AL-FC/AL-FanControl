@@ -1,6 +1,9 @@
 #!/usr/bin/python
 # usage: reset_arduino <DEVICE>
 # where <DEVICE> is typically some /dev/ttyfoobar
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
+
 import sys
 
 import serial
