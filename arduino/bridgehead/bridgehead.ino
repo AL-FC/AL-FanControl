@@ -24,10 +24,10 @@ void setup() {
 
   // set values to a safe and quiet default
   //int PWMS[] = {255, 255, 255, 16, 100, 100, 255, 100}; // summer
-  //int PWMS[] = {255, 255, 255, 16, 120, 120, 255, 120}; // gaming
+  //int PWMS[] = {255, 255, 255, 32, 120, 120, 255, 120}; // gaming
   //int PWMS[] = {255, 255, 255, 255, 120, 120, 255, 120}; // testing
-  int PWMS[] = {255, 255, 255, 56, 145, 145, 255, 145}; // streaming
-  //int PWMS[] = {255, 255, 255, 140, 160, 160, 255, 160}; // desktop
+  //int PWMS[] = {255, 255, 255, 56, 145, 145, 255, 145}; // streaming
+  int PWMS[] = {169, 255, 255, 255, 167, 181, 196, 176}; // desktop
   for (int i = 0; i < 8; i++) {
     SoftPWMSet(PINS_PWM[i], PWMS[i]);
   }
