@@ -1,28 +1,39 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+from config.configuration import Configuration
 
-def get_headrooms(temps, limits, ambients):
+
+def get_headrooms(temperatures):
+    """
+    Calculate the thermal headroom for each sensor.
+
+    Thermal headroom is the remaining fraction of the temperature range.
+    List entry will be None, if any temperature for its sensor is none.
+    """
+    limits = Configuration.limits
+    ambients = Configuration.ambients
+
     return [
         _get_headroom(ambient=ambient, limit=limit, temp=temp)
-        for temp, limit, ambient in zip(temps, limits, ambients)
+        for temp, limit, ambient in zip(temperatures, limits, ambients)
     ]
 
 
 def _get_headroom(ambient, limit, temp):
-    """
-    Calculate the thermal headroom.
-
-    The thermal headroom is the remaining fraction of the temperature range.
-    Return None, if any temperature is none.
-    """
     if None in [ambient, limit, temp]:
         return None
 
-    return (1 - ((temp - ambient) / (limit - ambient)))
+    return 1 - ((temp - ambient) / (limit - ambient))
 
 
 def get_pwms(headrooms):
+    """
+    Calculate pwm value for each fan.
+
+    PWM value is proportional to the given headroom and limited to [0, 255].
+    List entry will be None, if its headroom is None.
+    """
     return [
         _get_pwm(headroom=headroom)
         for headroom in headrooms

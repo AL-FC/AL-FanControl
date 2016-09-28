@@ -6,15 +6,16 @@ from __future__ import (absolute_import, division, print_function,
 
 import sensors
 
+from config.configuration import Configuration
 
-def get_temps(chips, features):  # pragma: no cover
+
+def get_temps():  # pragma: no cover
     """Get temperatures from lmsensors."""
 
     chips_detected = _get_detected_chips()
 
-    temps = _get_temperatures(chips=chips,
-                              features=features,
-                              chips_detected=chips_detected)
+    temps = _get_temperatures(chips_detected=chips_detected)
+
     return temps
 
 
@@ -27,18 +28,21 @@ def _get_detected_chips():  # pragma: no cover
     return chips_detected
 
 
-def _get_temperatures(chips, features, chips_detected):
+def _get_temperatures(chips_detected):
+    chips = Configuration.chips
+    features = Configuration.features
+
     temps = [None] * max(len(chips), len(features))
 
     for chip in chips_detected:
-        chip_prefix = to_str(chip.prefix)
+        chip_prefix = _to_str(chip.prefix)
 
         if chip_prefix not in chips:
             # this chip was not requested, so ignore
             continue
 
         for feature in chip:
-            feature_name = to_str(feature.name)
+            feature_name = _to_str(feature.name)
 
             if feature_name not in features:
                 # this feature was not requested, so ignore
@@ -61,8 +65,8 @@ def _get_temperatures(chips, features, chips_detected):
 
 
 def _get_index(chips, chip, features, feature, start_index):
-    feature_name = to_str(feature.name)
-    chip_prefix = to_str(chip.prefix)
+    feature_name = _to_str(feature.name)
+    chip_prefix = _to_str(chip.prefix)
 
     try:
         chip_index = chips[start_index:].index(chip_prefix)
@@ -100,7 +104,7 @@ class ChipFeatureMismatchError(BaseException):
     pass
 
 
-def to_str(bytes_or_string):
+def _to_str(bytes_or_string):
     try:
         string = bytes_or_string.decode()
     except AttributeError:
