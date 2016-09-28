@@ -1,2 +1,4 @@
 hg+ssh://hg@bitbucket.org/gleb_zhulik/py3sensors#egg=py3sensors
 pyserial==3.0.1
+docopt==0.6.2
+microbar==0.3.1

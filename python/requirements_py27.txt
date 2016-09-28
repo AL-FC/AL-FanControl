@@ -1,3 +1,0 @@
-pip==8.1.2
--r requirements_run_py27.txt
--r requirements_test_py27.txt

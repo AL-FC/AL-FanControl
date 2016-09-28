@@ -1,3 +1,0 @@
-pip==8.1.2
--r requirements_run_py35.txt
--r requirements_test_py35.txt
