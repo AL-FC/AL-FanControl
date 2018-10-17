@@ -1,8 +1,9 @@
+from __future__ import print_function
+
 from config.configuration import Configuration
 from microbar.microbar import MicroBar
 from model.state import State
 from ui.ui_abc import UserInterfaceBase
-
 
 class SingleLineInterface(UserInterfaceBase):
 

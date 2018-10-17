@@ -19,7 +19,7 @@ void setup() {
     pinMode(PINS_PULSE[i], INPUT_PULLUP);
     
     SoftPWMSetFadeTime(PINS_PWM[i], 0, 0);
-    SoftPWMSet(PINS_PWM[i], 0);
+    //SoftPWMSet(PINS_PWM[i], 0);
   }
 
   // set values to a safe and quiet default
@@ -27,7 +27,8 @@ void setup() {
   //int PWMS[] = {255, 255, 255, 32, 120, 120, 255, 120}; // gaming
   //int PWMS[] = {255, 255, 255, 255, 120, 120, 255, 120}; // testing
   //int PWMS[] = {255, 255, 255, 56, 145, 145, 255, 145}; // streaming
-  int PWMS[] = {169, 255, 255, 255, 167, 181, 196, 176}; // desktop
+  //int PWMS[] = {169, 255, 255, 255, 167, 181, 196, 176}; // desktop
+  int PWMS[] = {128, 128, 128, 128, 128, 128, 128, 128}; // desktop
   for (int i = 0; i < 8; i++) {
     SoftPWMSet(PINS_PWM[i], PWMS[i]);
   }

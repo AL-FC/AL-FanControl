@@ -17,8 +17,8 @@ class Configuration(object):
 
     # ToDo: Read this from a config file
     ports = [0, 1, 2, 3, 4, 5, 6, 7]
-    fans = [GPU, None, None, None, Case, Case, CPU, Case]
-    chips = [radeon, None, None, None, it8718, it8718, k10temp, it8718]
-    features = [temp1, None, None, None, temp3, temp3, temp1, temp3]
-    ambients = [25, None, None, None, 25, 25, 15, 25]
-    limits = [90, None, None, None, 75, 75, 60, 75]
+    fans = [CPU, CPU, CPU, GPU, Case, Case, Case, GPU]
+    chips = [k10temp, k10temp, k10temp, radeon, it8718, it8718, it8718, radeon]
+    features = [temp1, temp1, temp1, temp1, temp3, temp3, temp3, temp1]
+    ambients = [0, 0, 0, 25, 25, 25, 25, 25]
+    limits = [55, 55, 55, 90, 75, 75, 75, 90]

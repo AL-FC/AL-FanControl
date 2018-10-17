@@ -45,7 +45,8 @@ def _get_user_interface(ui):
 def main(user_interface):
     controller = Controller()
     user_interface = _get_user_interface(ui=user_interface)
-    with Bridgehead(tty='/dev/ttyACM0', baudrate=9600) as bridgehead:
+    ttys = ['/dev/ttyACM0', '/dev/ttyACM1', '/dev/ttyACM2', '/dev/ttyACM3']
+    with Bridgehead(ttys=ttys, baudrate=9600) as bridgehead:
         rpms = [None] * len(Configuration.fans)
         while True:
             controller.control(rpms)

@@ -7,6 +7,7 @@ from contextlib import contextmanager
 from multiprocessing import Process, Queue
 
 import serial
+from serial.serialutil import SerialException
 
 from communicate.bridgehead_util import message_to_rpms, pwms_to_message
 
@@ -32,9 +33,15 @@ def _writer(console, queue_write):
 
 
 @contextmanager
-def Bridgehead(tty, baudrate):
-    console = serial.Serial(tty, baudrate, timeout=1)
-    del tty, baudrate
+def Bridgehead(ttys, baudrate):
+    for tty in ttys:
+        try:
+            console = serial.Serial(tty, baudrate, timeout=1)
+            break
+        except SerialException as exception:
+            print(exception)
+            continue
+    del ttys, baudrate
 
     queue_read = Queue(maxsize=1)
     reader_t = Process(target=_reader, args=([console, queue_read]))
