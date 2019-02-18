@@ -1,65 +1,100 @@
 // fancontrol.ino
 //
-// Intentionally left simple and stupid so that all intelligent code can reside on the host side.
+// Intentionally kept simple and stupid so that all intelligent code can reside on the host side.
 
 #include <SoftPWM.h>
 
-// pins to which the fans are connected physically
-// connector index  0  1  2  3   4   5   6   7
-int PINS_PWM[]   = {2, 6, 9, 4, A3, 15, 10, A1};
-int PINS_PULSE[] = {3, 7, 8, 5, A2, 14, 16, A0};
+// Pins to which the fans are connected physically
+// Connector index  0   1   2   3   4   5   6   7
+int PINS_PWM[]   = {2,  6,  9,  4, A3, 15, 10, A1};
+int PINS_PULSE[] = {3,  7,  8,  5, A2, 14, 16, A0};
 
 void setup() {
-  // initialize serial connection
-  Serial.begin(9600);
+    // Initialize serial connection
+    Serial.begin(9600);
+
+    // Initialize pulse pins
+    for (int i = 0; i < 8; i++)     
+        pinMode(PINS_PULSE[i], INPUT_PULLUP);
+
+    // Initialize SoftPWM library
+    SoftPWMBegin(SOFTPWM_INVERTED);
+    SoftPWMSetFadeTime(ALL, 0, 0);
+
+    // Send 30 % as a start up pulse
+    int pwms[8] = {77, 77, 77, 77, 77, 77, 77, 77};
+    setPwms(pwms);
+}
+
+int* messageToPwms(String message){
+    // Caution: Non-reentrant return value.
+    static int pwms[8];
   
-  // init pwm
-  SoftPWMBegin();
-  for (int i = 0; i < 8; i++) {      
-    pinMode(PINS_PULSE[i], INPUT_PULLUP);
+    int separator_position;
+    for (int i = 0; i < 8; i++) {
+        // Determine next separator
+        separator_position = message.indexOf(';');
+        
+        // Parse value left of a ';' 
+        pwms[i] = message.substring(0, separator_position).toInt();
     
-    SoftPWMSetFadeTime(PINS_PWM[i], 0, 0);
-    //SoftPWMSet(PINS_PWM[i], 0);
-  }
-
-  // set values to a safe and quiet default
-  //int PWMS[] = {255, 255, 255, 16, 100, 100, 255, 100}; // summer
-  //int PWMS[] = {255, 255, 255, 32, 120, 120, 255, 120}; // gaming
-  //int PWMS[] = {255, 255, 255, 255, 120, 120, 255, 120}; // testing
-  //int PWMS[] = {255, 255, 255, 56, 145, 145, 255, 145}; // streaming
-  //int PWMS[] = {169, 255, 255, 255, 167, 181, 196, 176}; // desktop
-  int PWMS[] = {128, 128, 128, 128, 128, 128, 128, 128}; // desktop
-  for (int i = 0; i < 8; i++) {
-    SoftPWMSet(PINS_PWM[i], PWMS[i]);
-  }
+        // Strip part left of a ';' from message
+        message = message.substring(separator_position + 1);
+    }
+    
+    return pwms;
 }
 
+void logPulseIntervals () {
+    String pulseDurations = "";
+    
+    // Collect pulse durations from all fans into a message
+    for (int i = 0; i < 8; i++)
+        pulseDurations = pulseDurations + String(pulseIn(PINS_PULSE[i], LOW, 100000)) + ";";
+
+    // Log message to the host via the serial interface
+    Serial.println(pulseDurations);
+}
+
+void setPwms (int pwms[]) {
+    // Set PWM value to each fan
+    for (int i = 0; i < 8; i++)
+        SoftPWMSet(PINS_PWM[i], pwms[i]);
+}
+
+String LAST_MESSAGE = "";
 void loop() {
-  // get message from serial console
-  String message = "";
-  while (Serial.available())
-    message.concat((char) Serial.read());
-  if (message == "")
-    return;
+    // Get message from serial console
+    String message = "";
+    while (Serial.available())
+        message.concat((char) Serial.read());
 
-  // iterate fans, collect pulse durations
-  String pulseDurations = ":";
-  for (int i = 0; i < 8; i++) {
-    // parse value left of a ';' 
-    int value = message.substring(0, message.indexOf(';')).toInt();
-    
-    SoftPWMSet(PINS_PWM[i], value);
-    
-    // strip part left of a ';' from message
-    message = message.substring(message.indexOf(';') + 1);
-
-    // respond with pulse durations
-    pulseDurations = pulseDurations + String(pulseIn(PINS_PULSE[i], LOW)) + ";";
-    
-    // if there is no further ';' in the message, parse and set the rest of it
-    if (message.indexOf(';') == -1)
-      SoftPWMSet(PINS_PWM[i], message.toInt());
-  }
-  Serial.println(pulseDurations);
+    if (message == "") {
+        if (LAST_MESSAGE == "") {
+            // We have never gotten a message.
+            // So keep waiting for one.
+            return;
+        } else {
+            // We have not gotten a message this time, but last time.
+            // So use the last message as our current one.
+            message = LAST_MESSAGE;
+            // We already know that the current message equals last message.
+            // So log the pulse intervals.
+            logPulseIntervals();
+        }
+    } else {
+        // We got a message this time.
+        if (LAST_MESSAGE == message) {
+            // This message was repeated by the host.
+            // So log the pulse intervals.
+            logPulseIntervals();            
+        } else {
+            // This message was new.
+            // So update the last message.
+            LAST_MESSAGE = message;
+            // Also update the PWMs and the log pulse intervals.
+            setPwms(messageToPwms(message));
+            logPulseIntervals();
+        }
+    }
 }
-
