@@ -1,0 +1,32 @@
+*Pick And Place List
+*Company=
+*Author=
+*eMail=
+*
+*Project=UberPWM4_breadboard
+*Date=10:18:22
+*CreatedBy=Fritzing 0.9.3b.04.19.5c895d327c44a3114e5fcc9d8260daf0cbb52806
+*
+*
+*Coordinates in mm, always center of component
+*Origin 0/0=Lower left corner of PCB
+*Rotation in degree (0-360, math. pos.)
+*
+*No;Value;Package;X;Y;Rotation;Side;Name
+1;;molex-1x4_lock;32.087;-30.99;0;Bottom;JP13
+2;;molex-1x4_lock;21.927;-30.99;0;Bottom;JP14
+3;;molex-1x4_lock;49.867;-22.608;180;Bottom;JP3
+4;;molex-1x4_lock;11.767;-30.99;0;Bottom;JP15
+5;;;51.1798;-28.069;0;Bottom;Part3
+6;;molex-1x4_lock;19.387;-22.608;180;Bottom;JP16
+7;;molex-1x4_lock;60.027;-22.608;180;Bottom;JP2
+8;;molex-1x4_lock;82.887;-30.99;0;Bottom;JP8
+9;;molex-1x4_lock;29.547;-22.608;180;Bottom;JP4
+10;;molex-1x4_lock;70.187;-22.608;180;Bottom;JP0
+11;;molex-1x4_lock;52.407;-30.99;0;Bottom;JP11
+12;;molex-1x4_lock;80.347;-22.608;180;Bottom;JP1
+13;;molex-1x4_lock;39.707;-22.608;180;Bottom;JP5
+14;;molex-1x4_lock;62.567;-30.99;0;Bottom;JP10
+15;;molex-1x4_lock;42.247;-30.99;0;Bottom;JP12
+16;;molex-1x4_lock;72.727;-30.99;0;Bottom;JP9
+17;;molex-1x4_lock;9.22697;-22.608;180;Bottom;JP7
