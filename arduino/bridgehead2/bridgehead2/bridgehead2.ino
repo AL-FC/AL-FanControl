@@ -1,32 +1,51 @@
-// Intentionally kept simple and stupid so that all intelligent code can reside on the host side.
+#include <PalatisSoftPWM.h>
 
-#include <SoftPWM.h>
+int PINS_PULSE[] = {3, 7, 8, 5, A2, 14, 16, A0};
 
-// Pins to which the fans are connected physically
-// Names PCB          0   1   2   3   4   5   6   7
-// Names ARM         PD1 PD7 PB5 PD4 PF4 PB1 PB6 PF6
-// Names Arduino      2   6   9   4   A3 SCK 10  A1
-//                                       ???
-bool PINS_ANALOG[] = {0,  1,  1,  0,  0,  0,  0,  0};
-int  PINS_PWM[]    = {2,  6,  9,  4, A3, 15, 10, A1};
-int  PINS_PULSE[]  = {3,  7,  8,  5, A2, 14, 16, A0};
+SOFTPWM_DEFINE_PIN2_CHANNEL(0);
+SOFTPWM_DEFINE_PIN6_CHANNEL(1);
+SOFTPWM_DEFINE_PIN9_CHANNEL(2);
+SOFTPWM_DEFINE_PIN4_CHANNEL(3);
+SOFTPWM_DEFINE_PINA3_CHANNEL(4);
+SOFTPWM_DEFINE_PIN15_CHANNEL(5);
+SOFTPWM_DEFINE_PIN10_CHANNEL(6);
+SOFTPWM_DEFINE_PINA1_CHANNEL(7);
+
+const int PWM_CHANNEL_COUNT = 8;
+const int PWM_LEVEL_COUNT = 256;
+SOFTPWM_DEFINE_OBJECT_WITH_PWM_LEVELS(PWM_CHANNEL_COUNT, PWM_LEVEL_COUNT);
 
 void setup() {
-    // Initialize serial connection
-    const int SERIAL_BD_RATE = 19200;
-    Serial.begin(SERIAL_BD_RATE);
+  const int PWM_FREQUENCY = 512;
+  PalatisSoftPWM.begin(PWM_FREQUENCY);
 
-    // Initialize pulse pins
-    for (int i = 0; i < 8; i++)     
-        pinMode(PINS_PULSE[i], INPUT_PULLUP);
+  // space out fan speeds a bit to avoid some resonance
+  // int pwms[8] = {128, 128, 128, 128, 128, 128, 128, 128};
+  // int pwms[8] = {114, 118, 122, 126, 130, 134, 138, 142};
 
-    // Initialize SoftPWM library
-    SoftPWMBegin(SOFTPWM_INVERTED);
-    SoftPWMSetFadeTime(ALL, 0, 0);
+  // space out fan speeds a bit to avoid some resonance
+  // int pwms[8] = {96, 96, 96, 96, 96, 96, 96, 96};
+  // int pwms[8] = {82, 86, 90, 94, 98, 102, 106, 110};
+  int pwms[8] = {38, 40, 42, 44, 46, 48, 50, 52};
 
-    // Send 30 % as a start up pulse
-    int pwms[8] = {80, 80, 80, 80, 80, 80, 80, 80};
-    setPwms(pwms);
+  // Shuffle PWM values to load fans randomly
+  for (int i = 0; i < 8 - 1; i++) {
+      int j = random(0, 8 - i);
+
+      int t = pwms[i];
+      pwms[i] = pwms[j];
+      pwms[j] = t;
+  }
+
+  // Send a start up pulse
+  setPwms(pwms);
+
+  // Initialize pulse pins
+  for (int i = 0; i < 8; i++)     
+      pinMode(PINS_PULSE[i], INPUT_PULLUP);
+
+  const int SERIAL_BD_RATE = 19200;
+  Serial.begin(SERIAL_BD_RATE);
 }
 
 int* messageToPwms(String message){
@@ -61,8 +80,11 @@ void logPulseIntervals () {
 
 void setPwms (int pwms[]) {
     // Set PWM value to each fan
-    for (int i = 0; i < 8; i++)
-        SoftPWMSet(PINS_PWM[i], pwms[i]);
+    for (byte channel = 0; channel < PalatisSoftPWM.size(); channel++)
+      PalatisSoftPWM.set(
+        channel,
+        PalatisSoftPWM.PWMlevels() - PalatisSoftPWM.PWMlevels() * pwms[channel] / 256
+      );
 }
 
 String LAST_MESSAGE = "";
@@ -100,4 +122,7 @@ void loop() {
             logPulseIntervals();
         }
     }
+
+    // Serial.println("");
+    PalatisSoftPWM.printInterruptLoad();
 }
