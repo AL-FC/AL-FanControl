@@ -240,6 +240,15 @@ Python-level
         -   Windows (>= 7) GUI
         -   cloud-based data logging and analysis
         -   apps for mobile
+
+-   [AquaComputer OCTO](https://shop.aquacomputer.de/product_info.php?products_id=3832)
+    -   8 channels
+    -   1 flow sensor input
+    -   4 temperature sensor inputs
+    -   74,90 €
+    -   Controllable via windows-only aquasuite software
+    -   Software updates are included only for 6 (!) months
+
 -   [Speedfan](http://www.almico.com/speedfan.php)
     -   windows-only software
     -   GUI
