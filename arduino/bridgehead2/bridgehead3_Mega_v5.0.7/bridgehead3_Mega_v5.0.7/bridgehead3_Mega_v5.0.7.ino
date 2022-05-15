@@ -11,7 +11,7 @@ void setup() {
 
     // The base frequency for pins 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 44, 45, and 46 is 31250 Hz
     // Allowed divisors are always 1 and 8; we don't need to worry about the rest for PWM fans.
-    // So set a pin's PWM frequency of each clock to 31250 Hz / 1 = 31250 Hz ~ 130 % of 24000 Hz
+    // So set a pin's PWM frequency of each clock to 31250 Hz / 1 = 31250 Hz ~ 125 % of 25000 Hz
     // TCCR3B
     setPwmFrequency( 2, 1);
     setPwmFrequency( 3, 1);
@@ -33,8 +33,8 @@ void setup() {
 
     // The base frequency for pins 4, and 13 is 62500 Hz
     // Allowed divisors are always 1 and 8; we don't need to worry about the rest for PWM fans.
-    // Set pin 4's PWM frequency of their clock to 62500 / 1 = 62500 Hz ~ 260 % of 24000 Hz
-    // Set pin 4's PWM frequency of their clock to 62500 / 8 = 7813 Hz ~ 33 % of 24000 Hz
+    // Set pin 4's PWM frequency of their clock to 62500 / 8 = 7813 Hz ~ 31 % of 25000 Hz
+    // Set pin 13's PWM frequency of their clock to 62500 / 8 = 7813 Hz ~ 31 % of 25000 Hz
     // TCCR0B
     setPwmFrequency(4, 8);
     setPwmFrequency(13, 8);
